@@ -1,105 +1,175 @@
 /**
- * @author Leandro Silva | Grafluxe
+ * @author Leandro Silva | Grafluxe, 2016
  * @license MIT
- *
- * Commiting this code, which was originally developed
- * in 2013, for the historical reasons.
  */
 
-/* jslint devel:true */
+(function () {
+  "use strict";
 
-"use strict";
+  if (window.hasGrafluxeSimImg) {
+    return;
+  }
 
-var imgs = document.getElementsByTagName("img"),
-    len = imgs.length,
-    modalDiv;
+  var main = document.createElement("div"),
+      gx = document.createElement("div"),
+      msg = document.createElement("div"),
+      thumb = document.createElement("div"),
+      btnSearch = document.createElement("div"),
+      btnCancel,
+      img = document.getElementsByTagName("img"),
+      imgLen = img.length,
+      imgClick,
+      anchor = document.getElementsByTagName("a"),
+      anchorLen = anchor.length,
+      anchorClick,
+      i,
+      setThumb,
+      thumbSrc,
+      msgVisible = true;
 
-function btn(targ, txt) {
-    var btn = document.createElement("button");
+  window.hasGrafluxeSimImg = true;
 
-    btn.style.width = "100px";
-    btn.innerHTML = txt;
+  //main
+  main.style.setProperty("background", "linear-gradient(0deg, #f3cf12 50%, #feda1d 50%)", "important");
+  main.style.setProperty("color", "#333", "important");
+  main.style.setProperty("font", "bold 13px Arial, Helvetica, sans-serif", "important");
+  main.style.setProperty("position", "fixed", "important");
+  main.style.setProperty("width", "100%", "important");
+  main.style.setProperty("top", "0", "important");
+  main.style.setProperty("left", "0", "important");
+  main.style.setProperty("padding", "10px", "important");
+  main.style.setProperty("width", "97%", "important");
+  main.style.setProperty("width", "calc(100% - 20px)", "important");
+  main.style.setProperty("box-shadow", "0 0 10px #999", "important");
+  main.style.setProperty("z-index", "9999999999", "important");
+  main.style.setProperty("box-sizing", "unset", "important");
 
-    targ.appendChild(btn);
+  main.id = "grafluxe-simimg";
 
-    return btn;
-}
+  //gx
+  gx.style.setProperty("background", "    url(data:image/PNG;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAQCAYAAAD0xERiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM5JREFUeNpiZEADoaGhCkAqAIjtgViAgXiwkRHJEJDGfiBOYCAdLFi9enUiI5JB+4HYgAyDNgANCgQxmKAC68k0CAQKYQwmoKtA3nIg0yCQ9x7ADQPifAbywUFkDhOa9w4A8QMSDHuAbtgHIJ4AxIpQSQVynYmcNBqAVD0pmoHhxYjuMpBBBqQahA3AkgY5Bm3AZVgAGYZNxGXYAjLS1wFchhVCkwUx4AByqscam0gxmo+jtAAloYlAFzUQTBpohgagJeYLQEM2EHIyQIABAIfHMpweN/VIAAAAAElFTkSuQmCC) no-repeat", "important");
+  gx.style.setProperty("width", "19px", "important");
+  gx.style.setProperty("height", "16px", "important");
+  gx.style.setProperty("float", "right", "important");
+  gx.style.setProperty("cursor", "pointer", "important");
 
-function modal(imgSrc) {
-    if(! modalDiv) {
-        var imgCont,
-            txtCont,
-            img;
+  gx.id = "grafluxe-logo-icon";
+  gx.title = "Visit Grafluxe";
 
-        modalDiv = document.createElement("div");
+  gx.onclick = function () {
+    window.open("http://grafluxe.com/scripts#bookmarklets", "_blank");
+  };
 
-        modalDiv.style.backgroundColor = "#F00";
-        modalDiv.style.width = "450px";
-        modalDiv.style.height = "150px";
-        modalDiv.style.position = "fixed";
-        modalDiv.style.top = "50%25";
-        modalDiv.style.marginTop = "-100px";
-        modalDiv.style.left = "50%25";
-        modalDiv.style.marginLeft = "-250px";
-        modalDiv.style.padding = "25px";
-        modalDiv.style.zIndex = 1000000;
+  //msg
+  msg.style.setProperty("background", "linear-gradient(0deg, #f3cf12 50%, #feda1d 50%)", "important");
+  msg.style.setProperty("position", "absolute", "important");
+  msg.style.setProperty("width", "100%", "important");
+  msg.style.setProperty("height", "100%", "important");
+  msg.style.setProperty("top", "0", "important");
+  msg.style.setProperty("left", "0", "important");
+  msg.style.setProperty("text-align", "center", "important");
+  msg.style.setProperty("line-height", "6.5", "important");
 
-        imgCont = document.createElement("div");
+  msg.innerHTML = "Click an image to search Google for similar ones.";
 
-        imgCont.style.width = imgCont.style.height = "150px";
-        imgCont.style.border = "1px solid #FFF";
-        imgCont.style.cssFloat = "left";
-        imgCont.style.textAlign = "center";
+  //thumb
+  thumb.style.setProperty("background", "#333 no-repeat center center / contain", "important");
+  thumb.style.setProperty("width", "70px", "important");
+  thumb.style.setProperty("height", "70px", "important");
+  thumb.style.setProperty("float", "left", "important");
 
-        modalDiv.appendChild(imgCont);
+  //btns
+  btnSearch.style.setProperty("background", "#fff", "important");
+  btnSearch.style.setProperty("width", "28%", "important");
+  btnSearch.style.setProperty("max-width", "130px", "important");
+  btnSearch.style.setProperty("height", "28px", "important");
+  btnSearch.style.setProperty("margin", "15px 0 0 5px", "important");
+  btnSearch.style.setProperty("padding", "12px 0 0 0", "important");
+  btnSearch.style.setProperty("text-align", "center", "important");
+  btnSearch.style.setProperty("cursor", "pointer", "important");
+  btnSearch.style.setProperty("float", "left", "important");
+  btnSearch.style.setProperty("box-sizing", "unset", "important");
 
-        img = document.createElement("img");
+  btnSearch.innerHTML = "Search";
 
-        img.style.maxWidth = img.style.maxHeight = "100%25";
-        img.src = imgSrc;
+  btnCancel = btnSearch.cloneNode();
 
-        imgCont.appendChild(img);
+  btnCancel.innerHTML = "Cancel";
 
-        txtCont = document.createElement("div");
+  btnSearch.onmouseover = btnCancel.onmouseover = function (e) {
+    e.target.style.setProperty("box-shadow", "0 0 10px #c39f00", "important");
+  };
 
-        txtCont.style.width = "285px";
-        txtCont.style.height = "150px";
-        txtCont.style.border = "1px solid #000";
-        txtCont.style.cssFloat = "left";
-        txtCont.style.marginLeft = "10px";
-        txtCont.style.color = "#FFF";
-        txtCont.style.textAlign = "center";
+  btnSearch.onmouseout = btnCancel.onmouseout = function (e) {
+    e.target.style.setProperty("box-shadow", "unset", "important");
+  };
 
-        txtCont.innerHTML = "Are you sure you want to search for this image?";
+  btnSearch.onclick = function () {
+    window.open("http://images.google.com/searchbyimage?image_url=" + encodeURIComponent(thumbSrc), "_blank");
+  };
 
-        btn(txtCont, "Go").onclick = function () {
-      window.open("http://images.google.com/searchbyimage?image_url=" + imgSrc, "_blank");
-    };
-
-        btn(txtCont, "Cancel").onclick = function () {
-      modalDiv.style.display = "none";
-    };
-
-        modalDiv.appendChild(txtCont);
-
-        document.body.appendChild(modalDiv);
-    }else {
-        modalDiv.style.visibility = (modalDiv.style.visibility === "hidden" ? "visible" : "hidden");
+  btnCancel.onclick = function () {
+    for (i = 0; i < imgLen; i++) {
+      img[i].removeEventListener("click", imgClick, false);
     }
-}
 
-function onImgClick(e) {
+    for (i = 0; i < anchorLen; i++) {
+      anchor[i].removeEventListener("click", anchorClick, false);
+    }
+
+    document.body.removeChild(main);
+    delete window.hasGrafluxeSimImg;
+  };
+
+  //add listeners
+  imgClick = function (e) {
     e.preventDefault();
     e.stopImmediatePropagation();
 
-    if(e.target.src.indexOf("data:") === 0) {
-        alert("Not a valid image.");
-    }else {
-        modal(e.target.src);
+    thumbSrc = e.currentTarget.src;
+    setThumb();
+  };
+
+  setThumb = function () {
+    if (thumbSrc.substr(0, 5) === "data:") {
+      msg.innerHTML = "This image is currently unsupported.";
+      msgVisible = true;
+      msg.style.setProperty("display", "block", "important");
+
+      return;
     }
 
-}
+    if (msgVisible) {
+      msgVisible = false;
+      msg.style.setProperty("display", "none", "important");
+    }
 
-for(var i = 0; i < len; i++) {
-    imgs[i].addEventListener("click", onImgClick, false);
-}
+    thumb.title = thumbSrc;
+    thumb.style.setProperty("background-image", "url(" + thumbSrc + ")", "important");
+  };
+
+  anchorClick = function (e) {
+    e.preventDefault();
+
+    msg.innerHTML = "Anchor tags are currently unsupported.";
+    msgVisible = true;
+    msg.style.setProperty("display", "block", "important");
+  };
+
+  //
+  for (i = 0; i < imgLen; i++) {
+    img[i].addEventListener("click", imgClick, false);
+  }
+
+  for (i = 0; i < anchorLen; i++) {
+    anchor[i].addEventListener("click", anchorClick, false);
+  }
+
+  //add children
+  main.appendChild(gx);
+  main.appendChild(msg);
+  main.appendChild(thumb);
+  main.appendChild(btnSearch);
+  main.appendChild(btnCancel);
+  document.body.appendChild(main);
+}());
