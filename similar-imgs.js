@@ -6,89 +6,167 @@
 (function () {
   "use strict";
 
-  if (window.hasGrafluxeSimImg) {
+  if (window.simImgs) {
     return;
   }
 
-  var main = document.createElement("div"),
-      gx = document.createElement("div"),
-      msg = document.createElement("div"),
-      thumb = document.createElement("div"),
-      btnSearch = document.createElement("div"),
+  var VERSION = "1.0.0",
+      main,
+      info,
+      msg,
+      closeViaMsg,
+      thumb,
+      btnSearch,
       btnCancel,
-      img = document.getElementsByTagName("img"),
+      doc = document,
+      img = doc.getElementsByTagName("img"),
       imgLen = img.length,
-      imgClick,
-      anchor = document.getElementsByTagName("a"),
+      anchor = doc.getElementsByTagName("a"),
       anchorLen = anchor.length,
-      anchorClick,
       i,
-      setThumb,
       thumbSrc,
       msgVisible = true;
 
-  window.hasGrafluxeSimImg = true;
+  window.simImgs = true;
+
+  //functions
+  function css(el, key, val) {
+    el.style.setProperty(key, val, "important");
+  }
+
+  function div() {
+    return doc.createElement("div");
+  }
+
+  function append(el, to) {
+    to.appendChild(el);
+  }
+
+  function setThumb() {
+    if (thumbSrc.substr(0, 5) === "data:") {
+      msg.innerHTML = "This image is currently unsupported. Try another.";
+      append(closeViaMsg, msg);
+      msgVisible = true;
+      css(msg, "display", "block");
+
+      return;
+    }
+
+    if (msgVisible) {
+      msgVisible = false;
+      css(msg, "display", "none");
+    }
+
+    thumb.title = thumbSrc;
+    css(thumb, "background-image", "url(" + thumbSrc + ")");
+  }
+
+  function imgClick(e) {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+
+    thumbSrc = e.currentTarget.src;
+    setThumb();
+  }
+
+  function anchorClick(e) {
+    e.preventDefault();
+
+    msg.innerHTML = "Anchor tags are currently unsupported.";
+    append(closeViaMsg, msg);
+    msgVisible = true;
+    css(msg, "display", "block");
+  }
+
+  //set divs
+  main = div();
+  info = div();
+  msg = div();
+  closeViaMsg = div();
+  thumb = div();
+  btnSearch = div();
 
   //main
-  main.style.setProperty("background", "linear-gradient(0deg, #f3cf12 50%, #feda1d 50%)", "important");
-  main.style.setProperty("color", "#333", "important");
-  main.style.setProperty("font", "bold 13px Arial, Helvetica, sans-serif", "important");
-  main.style.setProperty("position", "fixed", "important");
-  main.style.setProperty("width", "100%", "important");
-  main.style.setProperty("top", "0", "important");
-  main.style.setProperty("left", "0", "important");
-  main.style.setProperty("padding", "10px", "important");
-  main.style.setProperty("width", "97%", "important");
-  main.style.setProperty("width", "calc(100% - 20px)", "important");
-  main.style.setProperty("box-shadow", "0 0 10px #999", "important");
-  main.style.setProperty("z-index", "9999999999", "important");
-  main.style.setProperty("box-sizing", "unset", "important");
+  css(main, "background", "linear-gradient(0deg, #f3cf12 50%, #feda1d 50%)");
+  css(main, "color", "#333");
+  css(main, "font", "bold 13px Arial, Helvetica, sans-serif");
+  css(main, "position", "fixed");
+  css(main, "width", "100%");
+  css(main, "top", "0");
+  css(main, "left", "0");
+  css(main, "padding", "10px");
+  css(main, "width", "97%");
+  css(main, "width", "calc(100% - 20px)");
+  css(main, "box-shadow", "0 0 10px #999");
+  css(main, "z-index", "9999999999");
+  css(main, "box-sizing", "unset");
+  css(main, "opacity", "0.96");
 
-  main.id = "grafluxe-simimg";
+  main.id = "sim-imgs";
 
-  //gx
-  gx.style.setProperty("background", "    url(data:image/PNG;base64,iVBORw0KGgoAAAANSUhEUgAAABMAAAAQCAYAAAD0xERiAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAM5JREFUeNpiZEADoaGhCkAqAIjtgViAgXiwkRHJEJDGfiBOYCAdLFi9enUiI5JB+4HYgAyDNgANCgQxmKAC68k0CAQKYQwmoKtA3nIg0yCQ9x7ADQPifAbywUFkDhOa9w4A8QMSDHuAbtgHIJ4AxIpQSQVynYmcNBqAVD0pmoHhxYjuMpBBBqQahA3AkgY5Bm3AZVgAGYZNxGXYAjLS1wFchhVCkwUx4AByqscam0gxmo+jtAAloYlAFzUQTBpohgagJeYLQEM2EHIyQIABAIfHMpweN/VIAAAAAElFTkSuQmCC) no-repeat", "important");
-  gx.style.setProperty("width", "19px", "important");
-  gx.style.setProperty("height", "16px", "important");
-  gx.style.setProperty("float", "right", "important");
-  gx.style.setProperty("cursor", "pointer", "important");
+  //info
+  css(info, "background", "#fff");
+  css(info, "border-radius", "8px");
+  css(info, "width", "16px");
+  css(info, "height", "16px");
+  css(info, "float", "right");
+  css(info, "cursor", "pointer");
+  css(info, "text-align", "center");
+  css(info, "padding-top", "1px");
+  css(info, "font", "12px monospace");
+  css(info, "margin-top", "3px");
 
-  gx.id = "grafluxe-logo-icon";
-  gx.title = "Visit Grafluxe";
+  info.title = "Version " + VERSION;
+  info.innerHTML = "i";
 
-  gx.onclick = function () {
-    window.open("http://grafluxe.com/scripts#bookmarklets", "_blank");
+  info.onclick = function () {
+    window.open("https://github.com/Grafluxe/similar-imgs", "_blank");
+  };
+
+  //close via msg
+  css(closeViaMsg, "cursor", "pointer");
+  css(closeViaMsg, "opacity", "0.3");
+  css(closeViaMsg, "margin", "-30px auto 0");
+  css(closeViaMsg, "line-height", "normal");
+  css(closeViaMsg, "width", "30px");
+  css(closeViaMsg, "padding", "6px");
+
+  closeViaMsg.innerHTML = "[x]";
+
+  closeViaMsg.onclick = function () {
+    btnCancel.onclick();
   };
 
   //msg
-  msg.style.setProperty("background", "linear-gradient(0deg, #f3cf12 50%, #feda1d 50%)", "important");
-  msg.style.setProperty("position", "absolute", "important");
-  msg.style.setProperty("width", "100%", "important");
-  msg.style.setProperty("height", "100%", "important");
-  msg.style.setProperty("top", "0", "important");
-  msg.style.setProperty("left", "0", "important");
-  msg.style.setProperty("text-align", "center", "important");
-  msg.style.setProperty("line-height", "6.5", "important");
+  css(msg, "background", "linear-gradient(0deg, #f3cf12 50%, #feda1d 50%)");
+  css(msg, "position", "absolute");
+  css(msg, "width", "100%");
+  css(msg, "height", "100%");
+  css(msg, "top", "0");
+  css(msg, "left", "0");
+  css(msg, "text-align", "center");
+  css(msg, "line-height", "6.5");
 
   msg.innerHTML = "Click an image to search Google for similar ones.";
+  append(closeViaMsg, msg);
 
   //thumb
-  thumb.style.setProperty("background", "#333 no-repeat center center / contain", "important");
-  thumb.style.setProperty("width", "70px", "important");
-  thumb.style.setProperty("height", "70px", "important");
-  thumb.style.setProperty("float", "left", "important");
+  css(thumb, "background", "#333 no-repeat center center / contain");
+  css(thumb, "width", "70px");
+  css(thumb, "height", "70px");
+  css(thumb, "float", "left");
 
   //btns
-  btnSearch.style.setProperty("background", "#fff", "important");
-  btnSearch.style.setProperty("width", "28%", "important");
-  btnSearch.style.setProperty("max-width", "130px", "important");
-  btnSearch.style.setProperty("height", "28px", "important");
-  btnSearch.style.setProperty("margin", "15px 0 0 5px", "important");
-  btnSearch.style.setProperty("padding", "12px 0 0 0", "important");
-  btnSearch.style.setProperty("text-align", "center", "important");
-  btnSearch.style.setProperty("cursor", "pointer", "important");
-  btnSearch.style.setProperty("float", "left", "important");
-  btnSearch.style.setProperty("box-sizing", "unset", "important");
+  css(btnSearch, "background", "#fff");
+  css(btnSearch, "width", "28%");
+  css(btnSearch, "max-width", "130px");
+  css(btnSearch, "height", "28px");
+  css(btnSearch, "margin", "15px 0 0 5px");
+  css(btnSearch, "padding", "12px 0 0 0");
+  css(btnSearch, "text-align", "center");
+  css(btnSearch, "cursor", "pointer");
+  css(btnSearch, "float", "left");
+  css(btnSearch, "box-sizing", "unset");
 
   btnSearch.innerHTML = "Search";
 
@@ -97,11 +175,11 @@
   btnCancel.innerHTML = "Cancel";
 
   btnSearch.onmouseover = btnCancel.onmouseover = function (e) {
-    e.target.style.setProperty("box-shadow", "0 0 10px #c39f00", "important");
+    e.target.css("box-shadow", "0 0 10px #c39f00");
   };
 
   btnSearch.onmouseout = btnCancel.onmouseout = function (e) {
-    e.target.style.setProperty("box-shadow", "unset", "important");
+    e.target.css("box-shadow", "unset");
   };
 
   btnSearch.onclick = function () {
@@ -117,46 +195,11 @@
       anchor[i].removeEventListener("click", anchorClick, false);
     }
 
-    document.body.removeChild(main);
-    delete window.hasGrafluxeSimImg;
+    doc.body.removeChild(main);
+    delete window.simImgs;
   };
 
   //add listeners
-  imgClick = function (e) {
-    e.preventDefault();
-    e.stopImmediatePropagation();
-
-    thumbSrc = e.currentTarget.src;
-    setThumb();
-  };
-
-  setThumb = function () {
-    if (thumbSrc.substr(0, 5) === "data:") {
-      msg.innerHTML = "This image is currently unsupported.";
-      msgVisible = true;
-      msg.style.setProperty("display", "block", "important");
-
-      return;
-    }
-
-    if (msgVisible) {
-      msgVisible = false;
-      msg.style.setProperty("display", "none", "important");
-    }
-
-    thumb.title = thumbSrc;
-    thumb.style.setProperty("background-image", "url(" + thumbSrc + ")", "important");
-  };
-
-  anchorClick = function (e) {
-    e.preventDefault();
-
-    msg.innerHTML = "Anchor tags are currently unsupported.";
-    msgVisible = true;
-    msg.style.setProperty("display", "block", "important");
-  };
-
-  //
   for (i = 0; i < imgLen; i++) {
     img[i].addEventListener("click", imgClick, false);
   }
@@ -166,10 +209,10 @@
   }
 
   //add children
-  main.appendChild(gx);
-  main.appendChild(msg);
-  main.appendChild(thumb);
-  main.appendChild(btnSearch);
-  main.appendChild(btnCancel);
-  document.body.appendChild(main);
+  append(msg, main);
+  append(info, main);
+  append(thumb, main);
+  append(btnSearch, main);
+  append(btnCancel, main);
+  append(main, doc.body);
 }());

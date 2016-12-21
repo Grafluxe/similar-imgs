@@ -1,0 +1,112 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Add Bookmarklet</title>
+  <meta name="viewport" content="width=device-width" >
+  <style>
+    body {
+      margin: 30px;
+      font: 14px sans-serif;
+      background-color: #f6f6f6;
+      color: #333;
+    }
+
+    a {
+      background-color: #666;
+      padding: 15px;
+      box-shadow: -5px 5px 8px #ccc;
+      margin: 10px 0;
+      display: inline-block;
+      text-decoration: none;
+      color: #eee;
+      border-radius: 3px;
+    }
+
+    hr {
+      margin: 40px 0;
+    }
+
+    ol, ul {
+      padding: 0 15px;
+    }
+
+    li {
+      padding: 3px 0;
+    }
+
+    ul li {
+      padding: 3px 0;
+      color: #888;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Desktop</h1>
+  <p>It's simple. Just drag this button into your bookmarks bar:</p>
+  <a id="desktop" href="#">loading&hellip;</a>
+
+  <hr>
+
+  <h1>Mobile</h1>
+  <p>Unfortunately, it's not simple. Follow these steps.</p>
+
+  <ol>
+    <li>
+      Click on the below button.
+      <ul>
+        <li>This will add a hash to your current URL.</li>
+      </ul>
+    </li>
+    <li>
+      Go through your normal steps to bookmark this page.
+      <ul>
+        <li>Name the bookmark "[similar-imgs]"</li>
+      </ul>
+    </li>
+    <li>
+      Once the bookmark is saved, edit its URL.
+      <ul>
+        <li>Erase everything before, and including, the "#" character.</li>
+        <li>It may take a while to scroll to the beginning of the URL, but you'll only need to do this once.</li>
+        <li>Your new URL should begin with the word "javascript:."</li>
+      </ul>
+    </li>
+  </ol>
+
+  <a id="mobile" href="#">loading&hellip;</a>
+
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script>
+    var bmkDesktop = document.querySelector("#desktop"),
+        bmkMobile = document.querySelector("#mobile");
+
+    bmkDesktop.addEventListener("click", function (e) {
+      e.preventDefault();
+      alert("For desktop use, drag and drop this button into your bookmarks bar.");
+    });
+
+    bmkMobile.addEventListener("click", function (e) {
+      e.preventDefault();
+      location.hash = bmkMobile.dataset.hash;
+    });
+
+    $.ajaxSetup({
+      converters: {
+        "text script": function (text) {
+          return text;
+        }
+      }
+    });
+
+    $.get("./similar-imgs-bmk.js", function (data) {
+      bmkDesktop.innerHTML = bmkMobile.innerHTML = "[similar-imgs]";
+      bmkDesktop.href = data;
+      bmkMobile.dataset.hash = data;
+    }).fail(function () {
+      $("body").text("There was an error loading the bookmarklet. Please try again later.");
+    });
+  </script>
+</body>
+</html>
