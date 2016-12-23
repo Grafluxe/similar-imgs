@@ -27,7 +27,7 @@ This bookmarklet can come in handy in the following scenarios:
 
 ## Install/Use It
 
-Visit the [add-bookmarklet](http://htmlpreview.github.io/?https://github.com/Grafluxe/similar-imgs/blob/master/bookmarklet/add-bookmarklet.html) page.
+Install via [Bookmarklet Installer](http://grafluxe.com/asset/bmk?title=similar-imgs&path=bit.ly%2F2hx1n73).
 
 ## How To Use
 

@@ -4,8 +4,7 @@
   "description": "This bookmarklet adds the ability to click on an image on any web page in order to easily search for similar images (via Google). It's useful for when trying to locate additional photos of the same content.",
   "main": "similar-imgs.js",
   "scripts": {
-    "build": "npm run uglify -s && node bookmarklet/make-bookmarklet",
-    "uglify": "uglifyjs similar-imgs.js -o bookmarklet/similar-imgs-bmk.js --preamble \"/*http://grafluxe.com*/\" -m -c"
+    "minify": "uglifyjs similar-imgs.js -o similar-imgs.min.js -m -c"
   },
   "author": "Leandro Silva (http://grafluxe.com)",
   "repository": "https://github.com/Grafluxe/similar-imgs.git",
