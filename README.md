@@ -2,9 +2,9 @@
 
 This bookmarklet adds the ability to click on an image on any web page in order to easily search for similar images (via Google). It's useful for when trying to locate additional photos of the same content.
 
-The latest version is `1.0.0`.
-
 ![Screenshot](./screenshot.gif)
+
+The latest version is `1.0.0`
 
 ## What is a Bookmarklet
 
@@ -12,7 +12,7 @@ A bookmarklet is a browser bookmark that runs code. It allows developers to exte
 
 ## Use Case
 
-This bookmarklet can come in handy in the following scenarios:
+This bookmarklet can come in handy when in the following scenarios:
 
 - You see a photo and want to find others like it (other angles, similar stock photos, etc.).
 - You find a photo of a person and would like to find out who they are.
@@ -40,11 +40,11 @@ When on a web page, if you see an image that you would like to find similar imag
   - If the image can't be processed, you'll be notified.
   - Note that on some sites, images may click-through (depending on how the site was developed).
 
-To determine the version you're running, *hover* over the info (i) button. If you're version is outdated, delete your bookmarklet and revisit the [setup](#setup) process.
+To determine the version you're running, *hover* over the info (i) button. If you're version is outdated, delete your bookmarklet and reinstall.
 
 ## License
 
-Copyright (c) 2013-2016 Leandro Silva (http://grafluxe.com)
+Copyright (c) 2013, 2016 Leandro Silva (http://grafluxe.com)
 
 Released under the MIT License.
 
