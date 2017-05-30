@@ -27,7 +27,7 @@ This bookmarklet can come in handy when in the following scenarios:
 
 ## Install/Use It
 
-Install via [Bookmarklet Installer](http://grafluxe.com/asset/bmk?title=similar-imgs&path=bit.ly%2F2qnAWsP).
+Install via [Bookmarklet Installer](http://grafluxe.com/o/bmk?title=similar-imgs&path=bit.ly%2F2qnAWsP).
 
 ## How To Use
 
